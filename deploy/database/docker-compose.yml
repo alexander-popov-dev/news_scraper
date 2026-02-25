@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+
+  news-scraper-redis:
+    image: redis:6.0.17-alpine
+    container_name: news-scraper-redis
+    command: --port 6379 --save 60 1 --loglevel warning --requirepass ${REDIS_PASS} &
+    restart: always
+    ports:
+      - "127.0.0.1:${REDIS_LOCAL_PORT}:${REDIS_PORT}"
+    volumes:
+      - news_scraper_volume_redis:/data
+    env_file:
+      - ../../.env
+    networks:
+      - news-scraper-network
+
+  news-scraper-postgres:
+    container_name: news-scraper-postgres
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+    ports:
+      - "127.0.0.1:${DB_LOCAL_PORT}:${DB_PORT}"
+    volumes:
+      - news_scraper_volume_postgres:/var/lib/postgresql/data
+    env_file:
+      - ../../.env
+    networks:
+      - news-scraper-network
+
+volumes:
+  news_scraper_volume_postgres:
+  news_scraper_volume_redis:
+
+networks:
+  news-scraper-network:
+    name: news-scraper-network
+    driver: bridge
