@@ -4,7 +4,7 @@ from src.core.dto import ArticlesDTO, ArticleDTO
 
 from src.core.abstract.parsers import BaseNewsParser
 from src.sites.months_mapping import RUS_TO_ENG
-from src.sites.utils import parse_datetime_tz, get_base_url, parse_datetime_mouths
+from src.sites.utils import parse_datetime_tz, get_base_url, parse_datetime_months
 
 
 class NewsParser(BaseNewsParser):
@@ -26,7 +26,7 @@ class NewsParser(BaseNewsParser):
             title = article.xpath(self.TITLE).get().strip()
             subtitle = article.xpath(self.SUBTITLE).get().strip()
             published_at = article.xpath(self.PUBLISHED_XPATH).get().strip()
-            published_at = parse_datetime_mouths(dt=published_at, months_map=RUS_TO_ENG)
+            published_at = parse_datetime_months(dt=published_at, months_map=RUS_TO_ENG)
             published_at = parse_datetime_tz(dt=published_at, tz=timezone)
 
             article_dto_list.append(

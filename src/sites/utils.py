@@ -21,7 +21,7 @@ def parse_datetime_tz(dt: str | datetime, tz: str, dayfirst: bool = False) -> da
     return dt.astimezone(ZoneInfo('UTC'))
 
 
-def parse_datetime_mouths(dt: str, months_map: dict) -> str:
+def parse_datetime_months(dt: str, months_map: dict) -> str:
     dt = dt.lower()
     for other, eng_month in months_map.items():
         if other in dt:

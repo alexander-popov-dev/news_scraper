@@ -4,7 +4,7 @@ from parsel import Selector
 from src.core.abstract.parsers import BaseNewsParser
 from src.core.dto import ArticleDTO, ArticlesDTO
 from src.sites.months_mapping import RUS_TO_ENG
-from src.sites.utils import parse_datetime_mouths, parse_datetime_tz, get_base_url
+from src.sites.utils import parse_datetime_months, parse_datetime_tz, get_base_url
 
 
 class NewsParser(BaseNewsParser):

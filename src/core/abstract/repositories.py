@@ -26,7 +26,7 @@ class BaseArticleRepository(ABC):
 
 class BaseSiteRepository(ABC):
     @abstractmethod
-    def get_sites_for_scraping(self) -> SitesDTO | None:
+    def get_sites_for_scraping(self, site_ids: list[int] | None = None) -> SitesDTO | None:
         ...
 
     @abstractmethod

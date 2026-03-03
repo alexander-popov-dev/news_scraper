@@ -22,11 +22,11 @@ def run_scraping_process_task(site_ids: list[int] | None = None):
     sites = site_repo.get_sites_for_scraping(site_ids=site_ids)
 
     for site_dto in sites.sites:
+        queue = configs_loader.load_configs(package=site_dto.package).news.queue
+
         session_id = session_repo.create_session(
             scraping_type=ScrapingDataType.NEWS
         )
-
-        queue = configs_loader.load_configs(package=site_dto.package).news.queue
 
         run_scraping_task.apply_async(
             kwargs={

@@ -68,7 +68,7 @@ class NewsController:
                     self._pagination.stop()
 
                 for article in articles_dto.articles:
-                    if self._until_date and article.published_at <= self._until_date:
+                    if self._until_date and article.published_at and article.published_at <= self._until_date:
                         self._pagination.stop()
                         break
 

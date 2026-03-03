@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 class RequestsClient(BaseRequestClient):
 
     def __init__(self, proxy: str | dict | None = None, provider: BaseBrowserProvider | None = None) -> None:
-        self._session: Optional[Session] | None = None
+        self._session: Optional[Session] = None
         super().__init__(proxy, provider)
 
     def start(self):
@@ -35,7 +35,7 @@ class RequestsClient(BaseRequestClient):
             json=request_dto.json,
             data=request_dto.data,
             cookies=request_dto.cookies,
-            proxies={'http': self._proxy, 'https': self._proxy} if request_dto.proxy else None,
+            proxies={'http': self._proxy, 'https': self._proxy} if self._proxy else None,
             timeout=request_dto.timeout,
         )
 

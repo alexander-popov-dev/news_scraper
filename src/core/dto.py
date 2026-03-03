@@ -31,17 +31,17 @@ class ResponseDTO:
 
     def text(self) -> str:
         """ Return body as text """
-        headers = self.request_info.get('headers')
+        headers = self.request_info.get('headers') if self.request_info else None
 
         if headers:
-            content_type = headers.get("content-type", "")
-            match = re.search(r"charset=([\w-]+)", content_type, re.IGNORECASE)
+            content_type = headers.get('content-type', '')
+            match = re.search(r'charset=([\w-]+)', content_type, re.IGNORECASE)
 
             if match:
                 encoding = match.group(1)
-                return self.response.decode(encoding, errors="strict")
+                return self.response.decode(encoding, errors='strict')
 
-        return self.response.decode("utf-8", errors="replace")
+        return self.response.decode('utf-8', errors='replace')
 
     def json(self) -> dict | None:
         """ Return body as JSON if possible """
