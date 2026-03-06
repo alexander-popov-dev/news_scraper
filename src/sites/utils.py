@@ -15,7 +15,7 @@ def parse_datetime_tz(dt: str | datetime, tz: str, dayfirst: bool = False) -> da
     if isinstance(dt, str):
         dt = parse(dt, dayfirst=dayfirst)
 
-    if dt.tzinfo is None:
+    if tz and dt.tzinfo is None:
         dt = dt.replace(tzinfo=ZoneInfo(tz))
 
     return dt.astimezone(ZoneInfo('UTC'))
