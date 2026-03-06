@@ -61,7 +61,11 @@ class NewsController:
                     session_id=self._session_id
                 )
 
-                articles_dto = self._parser.parse_news(content=response_dto.text(), url=url, timezone=self._timezone)
+                articles_dto = self._parser.parse_news(
+                    content=response_dto.text(),
+                    page_url=url,
+                    timezone=self._timezone
+                )
                 articles.extend(articles_dto.articles)
 
                 if not articles_dto.articles or not self._until_date:
