@@ -10,7 +10,7 @@ class BaseArticleRepository(ABC):
         ...
 
     @abstractmethod
-    def get_latest_published_at(self, site: str) -> datetime | None:
+    def get_latest_published_at(self, site_id: int) -> datetime | None:
         ...
 
     @abstractmethod
