@@ -33,7 +33,7 @@ class ArticleScrapingConfigDTO:
     parser: type[BaseArticleParser]
     client: type[BaseClient]
     repository: type[BaseArticleRepository]
-    provider: BrowserProvider | None = None
+    provider: type[BaseBrowserProvider] | None = None
     queue: CeleryQueue = field(init=False)
 
     def __post_init__(self):
