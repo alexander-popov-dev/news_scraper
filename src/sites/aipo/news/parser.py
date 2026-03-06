@@ -14,7 +14,7 @@ class NewsParser(BaseNewsParser):
     SUBTITLE = './p//text()'
     PUBLISHED_XPATH = './/li[2]/text()'
 
-    def parse_news(self, content: str, url: str, timezone: str | None) -> ArticlesDTO:
+    def parse_news(self, content: str, page_url: str, timezone: str | None) -> ArticlesDTO:
         article_dto_list = []
         tree = Selector(text=content)
 

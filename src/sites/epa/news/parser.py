@@ -14,10 +14,13 @@ class NewsParser(BaseNewsParser):
     SUBTITLE_XPATH = './/p[@class="card-text text-dark d-none d-md-block"]//text()'
     PUBLISHED_XPATH = './/p[@class="card-text text-dark vp-date mb-1"]//text()'
 
-    def parse_news(self, content: str, url: str, timezone: str | None) -> ArticlesDTO:
+    def parse_news(self, content: str, page_url: str, timezone: str | None) -> ArticlesDTO:
         article_dto_list = []
         tree = Selector(text=content)
-        base_url = get_base_url(url=url)
+        base_url = get_base_url(url=page_url)
+
+        if not tree:
+            raise Exception('Failed to retrieve articles')
 
         for article in tree.xpath(self.ARTICLES_XPATH):
             url = f'{base_url}{article.xpath(self.URL_XPATH).get().strip()}'

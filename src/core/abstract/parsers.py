@@ -5,7 +5,7 @@ from src.core.dto import ArticlesDTO, ArticleDTO
 
 class BaseNewsParser(ABC):
     @abstractmethod
-    def parse_news(self, content: str, url: str, timezone: str | None) -> ArticlesDTO:
+    def parse_news(self, content: str, page_url: str, timezone: str | None) -> ArticlesDTO:
         pass
 
 class BaseArticleParser(ABC):
