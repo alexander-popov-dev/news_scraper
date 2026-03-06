@@ -18,5 +18,5 @@ class TelegramManager:
             response = requests.post(url, data=payload)
 
             if response.status_code != 200:
-                payload['text'] = f'<code>Unable to send work. {response.text}</code>',
+                payload['text'] = f'<code>Unable to send work. {response.text}</code>'
                 requests.post(url, data=payload)
