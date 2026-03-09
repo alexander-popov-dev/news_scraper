@@ -1,6 +1,6 @@
 import re
 from datetime import datetime
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Optional, Dict, Any
 
 
@@ -81,9 +81,20 @@ class ArticlesDTO:
     articles: list[ArticleDTO]
     site_id: int | None = None
     count: int | None = None
+    warnings: list[str] = field(default_factory=list)
 
     def __post_init__(self):
         self.count = len(self.articles)
+
+
+@dataclass
+class ScrapingResultDTO:
+    saved_articles: list[ArticleDTO]
+    warnings: list[str]
+
+    @property
+    def total_saved(self) -> int:
+        return len(self.saved_articles)
 
 
 @dataclass
