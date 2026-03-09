@@ -1,0 +1,9 @@
+target-version = "py314"
+
+[lint]
+select = ["E", "F", "W"]
+ignore = ["E501"]  # line too long
+
+[lint.per-file-ignores]
+"*/migrations/*" = ["E", "F", "W"]
+"src/tests.py" = ["E", "F", "W"]
