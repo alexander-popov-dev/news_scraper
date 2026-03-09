@@ -6,19 +6,22 @@ from src.sites.utils import parse_datetime_tz
 
 
 class NewsParser(BaseNewsParser):
-
     def get_article_items(self, content: str) -> list:
-        return ElementTree.fromstring(content).findall('channel/item')
+        return ElementTree.fromstring(content).findall("channel/item")
 
-    def parse_article_item(self, article, page_url: str, timezone: str | None) -> ArticleDTO:
-        url = article.findtext('link')
-        title = article.findtext('title')
+    def parse_article_item(
+        self, article, page_url: str, timezone: str | None
+    ) -> ArticleDTO:
+        url = article.findtext("link")
+        title = article.findtext("title")
 
         if not url or not title:
-            raise ValueError(f'url={url!r}, title={title!r}')
+            raise ValueError(f"url={url!r}, title={title!r}")
 
-        subtitle = article.findtext('description')
-        published_at = article.findtext('pubDate', '')
+        subtitle = article.findtext("description")
+        published_at = article.findtext("pubDate", "")
         published_at = parse_datetime_tz(dt=published_at, tz=timezone)
 
-        return ArticleDTO(url=url, title=title, subtitle=subtitle, published_at=published_at)
+        return ArticleDTO(
+            url=url, title=title, subtitle=subtitle, published_at=published_at
+        )

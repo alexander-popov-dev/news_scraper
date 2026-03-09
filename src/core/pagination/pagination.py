@@ -2,7 +2,6 @@ from src.core.pagination.abstract import BasePagination
 
 
 class PagePagination(BasePagination):
-
     def __iter__(self):
         page = self.page
 
@@ -26,6 +25,5 @@ class OffsetPagination(BasePagination):
 
 
 class SinglePageSource(BasePagination):
-
     def __iter__(self):
         yield self.url

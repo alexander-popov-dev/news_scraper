@@ -4,14 +4,18 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('src', '0011_alter_browserprofile_extra_data'),
+        ("src", "0011_alter_browserprofile_extra_data"),
     ]
 
     operations = [
         migrations.AddConstraint(
-            model_name='session',
-            constraint=models.CheckConstraint(condition=models.Q(('status__in', ['CREATED', 'RUNNING', 'SUCCESS', 'FAILED'])), name='session_status_valid'),
+            model_name="session",
+            constraint=models.CheckConstraint(
+                condition=models.Q(
+                    ("status__in", ["CREATED", "RUNNING", "SUCCESS", "FAILED"])
+                ),
+                name="session_status_valid",
+            ),
         ),
     ]

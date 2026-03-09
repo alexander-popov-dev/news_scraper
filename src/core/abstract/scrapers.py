@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from src.core.clients.abstract import BaseRequestClient, BaseBrowserClient
+from src.core.clients.abstract import BaseBrowserClient, BaseRequestClient
 from src.core.dto import ResponseDTO
 
 

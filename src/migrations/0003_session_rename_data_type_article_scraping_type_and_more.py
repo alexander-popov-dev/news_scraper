@@ -5,59 +5,93 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('src', '0002_article_data_type'),
+        ("src", "0002_article_data_type"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Session',
+            name="Session",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('status', models.CharField(max_length=50)),
-                ('scraping_type', models.CharField(max_length=50)),
-                ('error_msg', models.TextField(null=True)),
-                ('traceback_msg', models.TextField(null=True)),
-                ('started_at', models.DateTimeField(auto_now_add=True)),
-                ('finished_at', models.DateTimeField(null=True)),
-                ('total_saved', models.IntegerField(default=0)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                ("status", models.CharField(max_length=50)),
+                ("scraping_type", models.CharField(max_length=50)),
+                ("error_msg", models.TextField(null=True)),
+                ("traceback_msg", models.TextField(null=True)),
+                ("started_at", models.DateTimeField(auto_now_add=True)),
+                ("finished_at", models.DateTimeField(null=True)),
+                ("total_saved", models.IntegerField(default=0)),
             ],
             options={
-                'db_table': 'session',
+                "db_table": "session",
             },
         ),
         migrations.AlterModelTable(
-            name='article',
-            table='article',
+            name="article",
+            table="article",
         ),
         migrations.AlterModelTable(
-            name='site',
-            table='site',
+            name="site",
+            table="site",
         ),
         migrations.CreateModel(
-            name='RawResponseData',
+            name="RawResponseData",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('url', models.URLField()),
-                ('scraping_type', models.CharField(max_length=50)),
-                ('request_data', models.JSONField()),
-                ('response_text', models.TextField()),
-                ('site', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='raw_response_data', to='src.site')),
-                ('session', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='raw_response_data', to='src.session')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                ("url", models.URLField()),
+                ("scraping_type", models.CharField(max_length=50)),
+                ("request_data", models.JSONField()),
+                ("response_text", models.TextField()),
+                (
+                    "site",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="raw_response_data",
+                        to="src.site",
+                    ),
+                ),
+                (
+                    "session",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="raw_response_data",
+                        to="src.session",
+                    ),
+                ),
             ],
             options={
-                'db_table': 'raw_response_data',
+                "db_table": "raw_response_data",
             },
         ),
         migrations.AddField(
-            model_name='article',
-            name='session',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, related_name='articles', to='src.session'),
+            model_name="article",
+            name="session",
+            field=models.ForeignKey(
+                default=1,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="articles",
+                to="src.session",
+            ),
             preserve_default=False,
         ),
     ]

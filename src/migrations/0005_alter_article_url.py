@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('src', '0004_session_session_status'),
+        ("src", "0004_session_session_status"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='article',
-            name='url',
+            model_name="article",
+            name="url",
             field=models.URLField(max_length=5000, unique=True),
         ),
     ]

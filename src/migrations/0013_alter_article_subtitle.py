@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('src', '0012_session_session_status_valid'),
+        ("src", "0012_session_session_status_valid"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='article',
-            name='subtitle',
+            model_name="article",
+            name="subtitle",
             field=models.TextField(blank=True, null=True),
         ),
     ]

@@ -5,43 +5,64 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Site',
+            name="Site",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('url', models.URLField(unique=True)),
-                ('name', models.CharField(max_length=255)),
-                ('proxy', models.TextField(blank=True, null=True)),
-                ('is_active', models.BooleanField(default=False)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                ("url", models.URLField(unique=True)),
+                ("name", models.CharField(max_length=255)),
+                ("proxy", models.TextField(blank=True, null=True)),
+                ("is_active", models.BooleanField(default=False)),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='Article',
+            name="Article",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('url', models.URLField(unique=True)),
-                ('title', models.CharField(max_length=1000)),
-                ('subtitle', models.CharField(blank=True, max_length=1000, null=True)),
-                ('content', models.TextField(blank=True, null=True)),
-                ('published_at', models.DateTimeField(blank=True, null=True)),
-                ('site', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='articles', to='src.site')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                ("url", models.URLField(unique=True)),
+                ("title", models.CharField(max_length=1000)),
+                ("subtitle", models.CharField(blank=True, max_length=1000, null=True)),
+                ("content", models.TextField(blank=True, null=True)),
+                ("published_at", models.DateTimeField(blank=True, null=True)),
+                (
+                    "site",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="articles",
+                        to="src.site",
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
     ]

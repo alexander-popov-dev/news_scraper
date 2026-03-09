@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('src', '0003_session_rename_data_type_article_scraping_type_and_more'),
+        ("src", "0003_session_rename_data_type_article_scraping_type_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='session',
-            name='session_status',
+            model_name="session",
+            name="session_status",
             field=models.CharField(default=1, max_length=50),
             preserve_default=False,
         ),
