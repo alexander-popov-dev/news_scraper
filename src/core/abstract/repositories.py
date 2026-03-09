@@ -1,12 +1,12 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
-from src.core.dto import ArticlesDTO, SitesDTO, SiteDTO, ResponseDTO
+from src.core.dto import ArticleDTO, ArticlesDTO, SitesDTO, SiteDTO, ResponseDTO
 from src.core.enums import ScrapingDataType, SessionStatus
 
 
 class BaseArticleRepository(ABC):
     @abstractmethod
-    def save_articles(self, articles_dto: ArticlesDTO, scraping_type: ScrapingDataType, session_id: int) -> int:
+    def save_articles(self, articles_dto: ArticlesDTO, scraping_type: ScrapingDataType, session_id: int) -> list[ArticleDTO]:
         ...
 
     @abstractmethod
@@ -43,9 +43,11 @@ class BaseSessionRepository(ABC):
     def update_session(
             self,
             session_id: int,
-            session: SessionStatus,
+            status: SessionStatus,
             error_msg: str | None = None,
             traceback_msg: str | None = None,
-            total_saved: int | None = None,
+            total_saved: int = 0,
+            retries: int = 0,
+            finished_at: datetime | None = None,
     ) -> None:
         ...
