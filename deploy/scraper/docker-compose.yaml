@@ -78,4 +78,4 @@ services:
 
 networks:
   news-scraper-network:
-    driver: bridge
+    external: true
