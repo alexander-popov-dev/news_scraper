@@ -1,7 +1,7 @@
 import logging
 import time
 from functools import wraps
-from typing import Callable, Any
+from typing import Any, Callable
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +23,7 @@ def retry(retries: int = 3, delay: float = 1.0):
                     return func(*args, **kwargs)
                 except Exception as e:
                     last_error = e
-                    logger.error(f'Attempt {attempt} failed for {func.__name__}: {e}')
+                    logger.error(f"Attempt {attempt} failed for {func.__name__}: {e}")
 
                     if attempt < retries:
                         time.sleep(delay)

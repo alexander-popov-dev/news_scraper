@@ -1,11 +1,11 @@
 from dataclasses import dataclass, field
 from typing import Callable
 
-from src.core.abstract.parsers import BaseNewsParser, BaseArticleParser
+from src.core.abstract.parsers import BaseArticleParser, BaseNewsParser
 from src.core.abstract.repositories import BaseArticleRepository
 from src.core.abstract.scrapers import BaseScraper
-from src.core.clients.abstract import BaseClient, BaseBrowserClient
-from src.core.enums import CeleryQueue, BrowserProvider
+from src.core.clients.abstract import BaseBrowserClient, BaseClient
+from src.core.enums import CeleryQueue
 from src.core.pagination.abstract import BasePagination
 from src.core.providers.abstract import BaseBrowserProvider
 
@@ -41,6 +41,7 @@ class ArticleScrapingConfigDTO:
             self.queue = CeleryQueue.BROWSER_SCRAPING_QUEUE
         else:
             self.queue = CeleryQueue.REQUEST_SCRAPING_QUEUE
+
 
 @dataclass
 class ScrapingConfigsDTO:
