@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('src', '0008_session_retries'),
+        ("src", "0008_session_retries"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='site',
-            name='timezone',
+            model_name="site",
+            name="timezone",
             field=models.CharField(blank=True, max_length=100, null=True),
         ),
     ]

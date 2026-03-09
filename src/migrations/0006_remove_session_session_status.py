@@ -4,14 +4,13 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('src', '0005_alter_article_url'),
+        ("src", "0005_alter_article_url"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='session',
-            name='session_status',
+            model_name="session",
+            name="session_status",
         ),
     ]

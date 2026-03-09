@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('src', '0006_remove_session_session_status'),
+        ("src", "0006_remove_session_session_status"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='site',
-            name='package',
+            model_name="site",
+            name="package",
             field=models.CharField(default=1, max_length=255),
             preserve_default=False,
         ),

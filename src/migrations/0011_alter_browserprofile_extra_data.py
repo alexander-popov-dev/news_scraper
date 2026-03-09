@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('src', '0010_browserprofile_alter_article_created_at_and_more'),
+        ("src", "0010_browserprofile_alter_article_created_at_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='browserprofile',
-            name='extra_data',
+            model_name="browserprofile",
+            name="extra_data",
             field=models.JSONField(blank=True, null=True),
         ),
     ]

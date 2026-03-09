@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('src', '0007_site_package'),
+        ("src", "0007_site_package"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='session',
-            name='retries',
+            model_name="session",
+            name="retries",
             field=models.IntegerField(default=0),
         ),
     ]
