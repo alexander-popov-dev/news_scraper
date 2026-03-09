@@ -3,7 +3,7 @@ from datetime import datetime
 from django.db.models import Prefetch
 
 from src.core.abstract.repositories import BaseArticleRepository, BaseSiteRepository, BaseSessionRepository
-from src.core.dto import ArticlesDTO, SiteDTO, SitesDTO, ResponseDTO, BrowserProviderDTO
+from src.core.dto import ArticleDTO, ArticlesDTO, SiteDTO, SitesDTO, ResponseDTO, BrowserProviderDTO
 from src.core.enums import ScrapingDataType, SessionStatus
 from src.models import Article, Site, RawResponseData, Session, BrowserProfile
 
@@ -14,7 +14,7 @@ class ArticleRepository(BaseArticleRepository):
             articles_dto: ArticlesDTO,
             scraping_type: ScrapingDataType,
             session_id: int
-    ) -> int:
+    ) -> list[ArticleDTO]:
         urls = [article.url for article in articles_dto.articles]
 
         existing_urls = set(
@@ -38,11 +38,14 @@ class ArticleRepository(BaseArticleRepository):
         ]
 
         if not new_articles:
-            return 0
+            return []
 
         Article.objects.bulk_create(new_articles)
 
-        return len(new_articles)
+        return [
+            ArticleDTO(url=a.url, title=a.title, subtitle=a.subtitle, published_at=a.published_at)
+            for a in new_articles
+        ]
 
     def get_latest_published_at(self, site_id: int) -> datetime | None:
         return (
@@ -74,7 +77,7 @@ class SiteRepository(BaseSiteRepository):
     def get_site(self, site_id: int) -> SiteDTO | None:
         site = (
             Site.objects
-            .filter(pk=site_id, is_active=True)
+            .filter(pk=site_id)
             .prefetch_related(
                 Prefetch(
                     'browser_profiles',
@@ -115,10 +118,10 @@ class SiteRepository(BaseSiteRepository):
         )
 
     def get_sites_for_scraping(self, site_ids: list[int] | None = None) -> SitesDTO | None:
-        queryset = Site.objects.filter(is_active=True)
-
         if site_ids:
-            queryset = queryset.filter(pk__in=site_ids)
+            queryset = Site.objects.filter(pk__in=site_ids)
+        else:
+            queryset = Site.objects.filter(is_active=True)
 
         queryset = queryset.prefetch_related(
             Prefetch(

@@ -7,7 +7,7 @@ from src.core.enums import ScrapingDataType
 from src.core.pagination.abstract import BasePagination
 from src.core.abstract.parsers import BaseNewsParser
 from src.core.abstract.scrapers import BaseScraper
-from src.core.dto import ArticlesDTO
+from src.core.dto import ArticlesDTO, ScrapingResultDTO
 from src.core.providers.abstract import BaseBrowserProvider
 
 logger = logging.getLogger(__name__)
@@ -43,8 +43,9 @@ class NewsController:
         self._session_id = session_id
         self._proxy = proxy
 
-    def run(self) -> int:
+    def run(self) -> ScrapingResultDTO:
         articles = []
+        all_warnings = []
 
         with self._client(proxy=self._proxy, provider=self._provider) as client:
             scraper = self._scraper(client=client)
@@ -67,6 +68,7 @@ class NewsController:
                     timezone=self._timezone
                 )
                 articles.extend(articles_dto.articles)
+                all_warnings.extend(articles_dto.warnings)
 
                 if not articles_dto.articles or not self._until_date:
                     self._pagination.stop()
@@ -76,8 +78,10 @@ class NewsController:
                         self._pagination.stop()
                         break
 
-        return self._repository.save_articles(
+        saved_articles = self._repository.save_articles(
             articles_dto=ArticlesDTO(articles=articles, site_id=self._site_id),
             scraping_type=ScrapingDataType.NEWS,
             session_id=self._session_id
         )
+
+        return ScrapingResultDTO(saved_articles=saved_articles, warnings=all_warnings)

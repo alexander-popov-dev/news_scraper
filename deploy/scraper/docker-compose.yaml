@@ -3,7 +3,6 @@ version: '3.8'
 services:
 
   news-scraper-server:
-    container_name: news-scraper-server
     build:
       context: ../../
       dockerfile: deploy/scraper/Dockerfile
@@ -15,12 +14,11 @@ services:
       - ../../media:/app/media
     restart: always
     env_file:
-      - ../../.env
+      - ../../${APP_ENV_FILE:-.env}
     networks:
       - news-scraper-network
 
   news-scraper-nginx:
-    container_name: news-scraper-nginx
     image: nginx:1.25-alpine
     restart: always
     volumes:
@@ -31,60 +29,53 @@ services:
       - ${NGINX_PORT}:80
     depends_on:
       - news-scraper-server
-    env_file:
-      - ../../.env
     networks:
       - news-scraper-network
 
   news-scraper-beat:
-    container_name: news-scraper-beat
     build:
       context: ../../
       dockerfile: deploy/scraper/Dockerfile
     command: celery --app server beat --loglevel=info
     restart: always
     env_file:
-      - ../../.env
+      - ../../${APP_ENV_FILE:-.env}
     networks:
       - news-scraper-network
 
   news-scraper-manage-worker:
-    container_name: news-scraper-manage-worker
     build:
       context: ../../
       dockerfile: deploy/scraper/Dockerfile
     command: celery --app server worker -Q manage -c 1 --loglevel=info
     restart: always
     env_file:
-      - ../../.env
+      - ../../${APP_ENV_FILE:-.env}
     networks:
       - news-scraper-network
 
   news-scraper-request-worker:
-    container_name: news-scraper-request-worker
     build:
       context: ../../
       dockerfile: deploy/scraper/Dockerfile
     command: celery --app server worker -Q request_scraping -c 10 --loglevel=info
     restart: always
     env_file:
-      - ../../.env
+      - ../../${APP_ENV_FILE:-.env}
     networks:
       - news-scraper-network
 
   news-scraper-browser-worker:
-    container_name: news-scraper-browser-worker
     build:
       context: ../../
       dockerfile: deploy/scraper/Dockerfile
     command: celery --app server worker -Q browser_scraping -c 1 --loglevel=info
     restart: always
     env_file:
-      - ../../.env
+      - ../../${APP_ENV_FILE:-.env}
     networks:
       - news-scraper-network
 
 networks:
   news-scraper-network:
-    name: news-scraper-network
     driver: bridge

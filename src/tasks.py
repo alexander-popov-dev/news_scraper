@@ -1,3 +1,4 @@
+import html
 import logging
 import traceback
 from datetime import datetime, timezone
@@ -39,8 +40,9 @@ def run_scraping_process_task(site_ids: list[int] | None = None):
 
 @shared_task(
     bind=True,
+    max_retries=5,
     autoretry_for=(Exception,),
-    retry_kwargs={'max_retries': 5, 'countdown': 10},
+    retry_kwargs={'countdown': 10},
     retry_backoff=True
 )
 def run_scraping_task(self, site_id: int, session_id: int):
@@ -66,22 +68,32 @@ def run_scraping_task(self, site_id: int, session_id: int):
         factory = NewsControllerFactory(site_dto=site_dto, config=config, until_date=until_date, session_id=session_id)
 
         controller = factory.create()
-        total_saved = controller.run()
+        result = controller.run()
 
         session_repo.update_session(
             session_id=session_id,
             status=SessionStatus.SUCCESS,
-            total_saved=total_saved,
+            total_saved=result.total_saved,
             retries=self.request.retries,
             finished_at=datetime.now(timezone.utc)
         )
 
-        if total_saved:
-            message = (f'<b>{site_dto.name}</b>\n'
-                       f'Scraped {total_saved} new article/s')
+        if result.total_saved:
+            MAX_SHOWN = 10
+            shown = result.saved_articles[:MAX_SHOWN]
+            lines = [f'• <a href="{html.escape(a.url)}">{html.escape(a.title)}</a>' for a in shown]
+            if result.total_saved > MAX_SHOWN:
+                lines.append(f'  ...and {result.total_saved - MAX_SHOWN} more')
+            message = (f'✅ <b>{site_dto.name}</b>\n'
+                       f'Scraped {result.total_saved} new article/s:\n'
+                       + '\n'.join(lines))
             telegram.send_message(message=message)
 
-        logger.info(f'Finished scraping news. Site: {site_dto.package}. Saved {total_saved} new article/s')
+        if result.warnings:
+            warning_lines = '\n'.join(f'• {w}' for w in result.warnings)
+            telegram.send_message(message=f'⚠️ <b>{site_dto.name}</b> — parsing warnings:\n{warning_lines}')
+
+        logger.info(f'Finished scraping news. Site: {site_dto.package}. Saved {result.total_saved} new article/s')
 
     except Exception as e:
         logger.error(f'Error while scraping news. Site: {site_dto.package}. Error: {e}')
@@ -94,5 +106,9 @@ def run_scraping_task(self, site_id: int, session_id: int):
             retries=self.request.retries,
             finished_at=datetime.now(timezone.utc)
         )
+
+        if self.request.retries >= self.max_retries:
+            message = f'❌ <b>{html.escape(site_dto.name)}</b> — scraping failed:\n<code>{html.escape(str(e))}</code>'
+            telegram.send_message(message=message)
 
         raise

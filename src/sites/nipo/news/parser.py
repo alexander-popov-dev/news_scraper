@@ -1,8 +1,7 @@
-from django.utils.dateparse import parse_datetime
 from parsel import Selector
 
 from src.core.abstract.parsers import BaseNewsParser
-from src.core.dto import ArticleDTO, ArticlesDTO
+from src.core.dto import ArticleDTO
 from src.sites.months_mapping import UKR_TO_ENG
 from src.sites.utils import parse_datetime_tz, parse_datetime_months
 
@@ -13,26 +12,18 @@ class NewsParser(BaseNewsParser):
     TITLE = './/a/text()'
     PUBLISHED_XPATH = './/div[@class="blog-meta"]/span[1]/text()'
 
-    def parse_news(self, content: str, page_url: str, timezone: str | None) -> ArticlesDTO:
-        article_dto_list = []
-        tree = Selector(text=content)
+    def get_article_items(self, content: str) -> list:
+        return Selector(text=content).xpath(self.ARTICLES_XPATH)
 
-        if not tree:
-            raise Exception('Failed to retrieve articles')
+    def parse_article_item(self, article, page_url: str, timezone: str | None) -> ArticleDTO:
+        url = article.xpath(self.URL).get()
+        title = article.xpath(self.TITLE).get()
 
-        for article in tree.xpath(self.ARTICLES_XPATH):
-            url = article.xpath(self.URL).get().strip()
-            title = article.xpath(self.TITLE).get().strip()
-            published_at = article.xpath(self.PUBLISHED_XPATH).get().strip()
-            published_at = parse_datetime_months(dt=published_at, months_map=UKR_TO_ENG)
-            published_at = parse_datetime_tz(dt=published_at, tz=timezone)
+        if not url or not title:
+            raise ValueError(f'url={url!r}, title={title!r}')
 
-            article_dto_list.append(
-                ArticleDTO(
-                    url=url,
-                    title=title,
-                    published_at=published_at
-                )
-            )
+        published_at = article.xpath(self.PUBLISHED_XPATH).get('').strip()
+        published_at = parse_datetime_months(dt=published_at, months_map=UKR_TO_ENG)
+        published_at = parse_datetime_tz(dt=published_at, tz=timezone)
 
-        return ArticlesDTO(articles=article_dto_list)
+        return ArticleDTO(url=url.strip(), title=title.strip(), published_at=published_at)

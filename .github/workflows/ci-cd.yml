@@ -60,6 +60,5 @@ jobs:
           script: |
             cd ${{ secrets.PROJECT_PATH }}
             git pull origin main
-            docker compose -f deploy/scraper/docker-compose.yaml build --no-cache
-            docker compose -f deploy/scraper/docker-compose.yaml up -d
-            docker image prune -f
+            make down-prod
+            make up-prod

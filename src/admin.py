@@ -22,13 +22,5 @@ class ArticleAdmin(admin.ModelAdmin):
     show_facets = admin.ShowFacets.ALWAYS
 
     def linked_title(self, obj):
-        # Возвращает HTML ссылку
         return format_html('<a href="{}" target="_blank">{}</a>', obj.url, obj.title)
     linked_title.short_description = 'Title'
-
-# base_url = models.URLField(unique=True)
-#     name = models.CharField(max_length=255)
-#     is_active = models.BooleanField(default=True)
-#     scraping_type = models.CharField(max_length=50, choices=ScrapingType.choices, default=ScrapingType.REQUEST)
-# https://www.epo.org/en/news-events/news
-# https://nipo.gov.ua/blog/page/{page}/

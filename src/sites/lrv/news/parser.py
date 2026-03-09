@@ -1,32 +1,24 @@
 from xml.etree import ElementTree
+
 from src.core.abstract.parsers import BaseNewsParser
-from src.core.dto import ArticleDTO, ArticlesDTO
+from src.core.dto import ArticleDTO
 from src.sites.utils import parse_datetime_tz
 
 
 class NewsParser(BaseNewsParser):
 
-    def parse_news(self, content: str, page_url: str, timezone: str | None) -> ArticlesDTO:
-        article_dto_list = []
-        tree = ElementTree.fromstring(content)
+    def get_article_items(self, content: str) -> list:
+        return ElementTree.fromstring(content).findall('channel/item')
 
-        if not tree:
-            raise Exception('Failed to retrieve articles')
+    def parse_article_item(self, article, page_url: str, timezone: str | None) -> ArticleDTO:
+        url = article.findtext('link')
+        title = article.findtext('title')
 
-        for article in tree.findall('channel/item'):
-            url = article.find('link').text
-            title = article.find('title').text
-            subtitle = article.find('description').text
-            published_at = article.find('pubDate').text
-            published_at = parse_datetime_tz(dt=published_at, tz=timezone)
+        if not url or not title:
+            raise ValueError(f'url={url!r}, title={title!r}')
 
-            article_dto_list.append(
-                ArticleDTO(
-                    url=url,
-                    title=title,
-                    subtitle=subtitle,
-                    published_at=published_at
-                )
-            )
+        subtitle = article.findtext('description')
+        published_at = article.findtext('pubDate', '')
+        published_at = parse_datetime_tz(dt=published_at, tz=timezone)
 
-        return ArticlesDTO(articles=article_dto_list)
+        return ArticleDTO(url=url, title=title, subtitle=subtitle, published_at=published_at)
