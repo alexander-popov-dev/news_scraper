@@ -13,10 +13,11 @@ class TelegramManager:
                 'chat_id': TELEGRAM_CHANNEL,
                 'text': message,
                 'parse_mode': 'html',
+                'link_preview_options': {'is_disabled': True},
             }
 
-            response = requests.post(url, data=payload)
+            response = requests.post(url, json=payload)
 
             if response.status_code != 200:
                 payload['text'] = f'<code>Unable to send work. {response.text}</code>'
-                requests.post(url, data=payload)
+                requests.post(url, json=payload)
