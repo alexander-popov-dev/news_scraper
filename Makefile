@@ -1,21 +1,23 @@
 COMPOSE = docker compose -f deploy/scraper/docker-compose.yaml
+COMPOSE_PROD = $(COMPOSE) --env-file .env
+COMPOSE_DEV = APP_ENV_FILE=.env.dev $(COMPOSE) --env-file .env.dev -p news-scraper-dev
 
 .PHONY: up-prod up-dev down-prod down-dev logs-prod logs-dev
 
 up-prod:
-	$(COMPOSE) --env-file .env up -d
+	$(COMPOSE_PROD) up -d
 
 up-dev:
-	$(COMPOSE) --env-file .env.dev -p news-scraper-dev --env-file .env.dev up -d
+	$(COMPOSE_DEV) up -d
 
 down-prod:
-	$(COMPOSE) --env-file .env down --rmi all
+	$(COMPOSE_PROD) down --rmi all
 
 down-dev:
-	$(COMPOSE) --env-file .env.dev -p news-scraper-dev down --rmi all
+	$(COMPOSE_DEV) down --rmi all
 
 logs-prod:
-	$(COMPOSE) --env-file .env logs -f --tail 10000
+	$(COMPOSE_PROD) logs -f --tail 10000
 
 logs-dev:
-	$(COMPOSE) --env-file .env.dev -p news-scraper-dev logs -f --tail 10000
+	$(COMPOSE_DEV) logs -f --tail 10000
