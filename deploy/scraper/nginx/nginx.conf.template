@@ -7,7 +7,7 @@ http {
     default_type application/octet-stream;
 
     upstream backend {
-        server news-scraper-server:8885;
+        server news-scraper-server:${DJANGO_PORT};
     }
 
     server {
