@@ -16,12 +16,14 @@ class RequestsClient(BaseRequestClient):
         self,
         proxy: str | dict | None = None,
         provider: BaseBrowserProvider | None = None,
+        verify: bool = True,
     ) -> None:
         self._session: Optional[Session] = None
-        super().__init__(proxy, provider)
+        super().__init__(proxy, provider, verify)  # sets self._verify
 
     def start(self):
         self._session = requests.Session()
+        self._session.verify = self._verify
         logger.info("Requests session successfully started")
 
     def close(self):

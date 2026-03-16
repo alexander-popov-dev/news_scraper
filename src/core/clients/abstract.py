@@ -31,6 +31,15 @@ class BaseClient(ABC):
 
 
 class BaseRequestClient(BaseClient):
+    def __init__(
+        self,
+        proxy: str | dict | None = None,
+        provider: BaseBrowserProvider | None = None,
+        verify: bool = True,
+    ) -> None:
+        self._verify = verify
+        super().__init__(proxy, provider)
+
     @abstractmethod
     def start(self) -> None: ...
 
