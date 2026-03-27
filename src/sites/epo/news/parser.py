@@ -13,7 +13,7 @@ class NewsParser(BaseNewsParser):
     URL = ".//h5/a/@href"
     TITLE = ".//h5/a/text()"
     SUBTITLE = ".//p//text()"
-    PUBLISHED_XPATH = ".//time/@datetime"
+    PUBLISHED_XPATH = ".//div[@class='d-inline-flex align-items-center field--type-published-at']/text()"
 
     def get_article_items(self, content: str) -> list:
         return Selector(text=content).xpath(self.ARTICLES_XPATH)
@@ -30,7 +30,7 @@ class NewsParser(BaseNewsParser):
         base_url = get_base_url(url=page_url)
         subtitle = article.xpath(self.SUBTITLE).get("").strip() or None
         published_at = article.xpath(self.PUBLISHED_XPATH).get("").strip()
-        published_at = parse_datetime_tz(dt=published_at, tz=timezone)
+        published_at = parse_datetime_tz(dt=published_at, tz=timezone, dayfirst=True)
 
         return ArticleDTO(
             url=f"{base_url}{url.strip()}",
