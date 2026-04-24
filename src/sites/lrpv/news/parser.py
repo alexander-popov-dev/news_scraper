@@ -7,8 +7,8 @@ from src.sites.utils import get_base_url, parse_datetime_tz
 
 class NewsParser(BaseNewsParser):
     ARTICLES_XPATH = '//div[@class="article-info "]'
-    URL = ".//h3/a/@href"
-    TITLE = ".//h3/a/text()"
+    URL = ".//h2/a/@href"
+    TITLE = ".//h2/a/text()"
     SUBTITLE = './/div[@class="text"]//text()'
     PUBLISHED_XPATH = './/div[@class="date"]//text()'
 
