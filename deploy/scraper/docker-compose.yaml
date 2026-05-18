@@ -7,8 +7,6 @@ services:
       context: ../../
       dockerfile: deploy/scraper/Dockerfile
     command: [ "/bin/bash", "/app/entrypoint.sh" ]
-    ports:
-      - ${DJANGO_PORT}:${DJANGO_PORT}
     volumes:
       - ../../static:/app/static
       - ../../media:/app/media
