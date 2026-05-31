@@ -31,7 +31,7 @@ services:
       - ../../media:/media
       - ./nginx/nginx.conf.template:/etc/nginx/nginx.conf.template:ro
     ports:
-      - ${NGINX_PORT}:80
+      - 127.0.0.1:${NGINX_PORT}:80
     depends_on:
       - news-scraper-server
     networks:
