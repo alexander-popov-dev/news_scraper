@@ -36,6 +36,12 @@ services:
       - news-scraper-server
     networks:
       - news-scraper-network
+      - traefik-public
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.news_scraper.rule=Host(`${BACKEND_HOST}`)"
+      - "traefik.http.routers.news_scraper.tls.certresolver=le"
+      - "traefik.http.services.news_scraper.loadbalancer.server.port=80"
 
   news-scraper-beat:
     build:
@@ -83,4 +89,6 @@ services:
 
 networks:
   news-scraper-network:
+    external: true
+  traefik-public:
     external: true

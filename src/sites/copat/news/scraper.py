@@ -4,7 +4,7 @@ from src.core.dto import RequestDTO, ResponseDTO
 
 
 class NewsScraper(BaseScraper):
-    @retry(retries=3, delay=10)
+    @retry(retries=10, delay=5)
     def run(self, url: str) -> ResponseDTO:
         request_dto = RequestDTO(method="GET", url=url, timeout=30)
         response_dto = self._client.fetch(request_dto=request_dto)
