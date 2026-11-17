@@ -11,30 +11,25 @@ from playwright.sync_api import (
 
 from server.settings import HEADLESS
 from src.core.clients.abstract import BaseBrowserClient
-from src.core.providers.abstract import BaseBrowserProvider
 
 logger = logging.getLogger(__name__)
 
 
 class PlaywrightClient(BaseBrowserClient):
     def __init__(
-        self,
-        proxy: str | dict | None = None,
-        provider: BaseBrowserProvider | None = None,
+        self, proxy: str | None = None, cdp_endpoint_url: str | None = None
     ) -> None:
+        self._cdp_endpoint_url: str | None = cdp_endpoint_url
+        self._proxy: str | None = proxy
         self._playwright: Playwright | None = None
         self._context: BrowserContext | None = None
         self._browser: Browser | None = None
         self._page: Page | None = None
         self._storage: dict | None = None
-        super().__init__(proxy, provider)
 
     def _get_proxy(self) -> dict | None:
         if not self._proxy:
             return None
-
-        if isinstance(self._proxy, dict):
-            return self._proxy
 
         parsed = urlparse(self._proxy)
 
@@ -51,9 +46,10 @@ class PlaywrightClient(BaseBrowserClient):
     def start(self) -> None:
         self._playwright = sync_playwright().start()
 
-        if self._provider:
-            cdp = self._provider.start()
-            self._browser = self._playwright.chromium.connect_over_cdp(endpoint_url=cdp)
+        if self._cdp_endpoint_url:
+            self._browser = self._playwright.chromium.connect_over_cdp(
+                endpoint_url=self._cdp_endpoint_url
+            )
             self._context = self._browser.contexts[0]
             self._page = self._context.pages[0]
             logger.info("Playwright over CDP successfully started")
@@ -65,9 +61,6 @@ class PlaywrightClient(BaseBrowserClient):
             logger.info("Playwright successfully started")
 
     def close(self) -> None:
-        if self._provider:
-            self._provider.stop()
-
         if self._browser:
             self._browser.close()
 
