@@ -1,5 +1,3 @@
-from functools import partial
-
 from src.core.clients.request.requests.client import RequestsClient
 from src.core.factories.dto import NewsScrapingConfigDTO, ScrapingConfigsDTO
 from src.core.pagination.pagination import PagePagination
@@ -12,7 +10,7 @@ SCRAPING_CONFIGS = ScrapingConfigsDTO(
     news=NewsScrapingConfigDTO(
         scraper=NewsScraper,
         parser=NewsParser,
-        client=partial(RequestsClient, verify=False),
+        client=RequestsClient,
         repository=ArticleRepository,
         pagination=PagePagination,
     )
