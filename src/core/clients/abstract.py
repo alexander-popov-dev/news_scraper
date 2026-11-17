@@ -4,18 +4,9 @@ from typing import Self
 from playwright.sync_api import Page
 
 from src.core.dto import RequestDTO, ResponseDTO
-from src.core.providers.abstract import BaseBrowserProvider
 
 
 class BaseClient(ABC):
-    def __init__(
-        self,
-        proxy: str | dict | None = None,
-        provider: BaseBrowserProvider | None = None,
-    ) -> None:
-        self._proxy = proxy
-        self._provider = provider
-
     @abstractmethod
     def start(self) -> None: ...
 
@@ -31,15 +22,6 @@ class BaseClient(ABC):
 
 
 class BaseRequestClient(BaseClient):
-    def __init__(
-        self,
-        proxy: str | dict | None = None,
-        provider: BaseBrowserProvider | None = None,
-        verify: bool = True,
-    ) -> None:
-        self._verify = verify
-        super().__init__(proxy, provider)
-
     @abstractmethod
     def start(self) -> None: ...
 
