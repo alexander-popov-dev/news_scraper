@@ -51,7 +51,7 @@ class NewsController:
         articles = []
         all_warnings = []
 
-        with self._client(proxy=self._proxy, provider=self._provider) as client:
+        with self._client() as client:
             scraper = self._scraper(client=client)
 
             for url in self._pagination:
