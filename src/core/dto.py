@@ -9,7 +9,7 @@ class RequestDTO:
     """Universal DTO encapsulating all HTTP request parameters for any fetcher implementation"""
 
     url: str
-    method: Optional[str] = None
+    method: str
     headers: Optional[Dict[str, str]] = None
     params: Optional[Dict[str, Any]] = None
     json: Optional[Dict[str, Any]] = None
@@ -20,6 +20,7 @@ class RequestDTO:
     timeout: Optional[int] = None
     delay: Optional[int] = None
     allow_status_codes: Optional[list[int]] = None
+    verify: bool = True
 
 
 @dataclass
