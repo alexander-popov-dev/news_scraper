@@ -11,7 +11,9 @@ class NewsScraper(BaseScraper):
             "AppleWebKit/537.36 (KHTML, like Gecko) "
             "Chrome/148.0.0.0 Safari/537.36"
         }
-        request_dto = RequestDTO(method="GET", url=url, headers=headers, timeout=60)
+        request_dto = RequestDTO(
+            method="GET", url=url, headers=headers, timeout=60, verify=False
+        )
         response_dto = self._client.fetch(request_dto=request_dto)
 
         return response_dto
