@@ -6,7 +6,6 @@ from requests import Session
 
 from src.core.clients.abstract import BaseRequestClient
 from src.core.dto import RequestDTO, ResponseDTO
-from src.core.providers.abstract import BaseBrowserProvider
 
 logger = logging.getLogger(__name__)
 
@@ -15,11 +14,11 @@ class RequestsClient(BaseRequestClient):
     def __init__(
         self,
         proxy: str | dict | None = None,
-        provider: BaseBrowserProvider | None = None,
         verify: bool = True,
     ) -> None:
+        self._proxy = proxy
+        self._verify = verify
         self._session: Optional[Session] = None
-        super().__init__(proxy, provider, verify)  # sets self._verify
 
     def start(self):
         self._session = requests.Session()
@@ -32,6 +31,11 @@ class RequestsClient(BaseRequestClient):
         logger.info("Requests session successfully stopped")
 
     def fetch(self, request_dto: RequestDTO) -> ResponseDTO:
+        proxies = (
+            {"http": request_dto.proxy, "https": request_dto.proxy}
+            if request_dto.proxy
+            else None
+        )
         response = self._session.request(
             method=request_dto.method,
             url=request_dto.url,
@@ -40,10 +44,9 @@ class RequestsClient(BaseRequestClient):
             json=request_dto.json,
             data=request_dto.data,
             cookies=request_dto.cookies,
-            proxies={"http": self._proxy, "https": self._proxy}
-            if self._proxy
-            else None,
+            proxies=proxies,
             timeout=request_dto.timeout,
+            verify=request_dto.verify,
         )
 
         response.raise_for_status()
